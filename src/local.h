@@ -1,7 +1,7 @@
 /*
  * local.h - Define the clinet's buffers and callbacks
  *
- * Copyright (C) 2013 - 2014, Max Lv <max.c.lv@gmail.com>
+ * Copyright (C) 2013 - 2015, Max Lv <max.c.lv@gmail.com>
  *
  * This file is part of the shadowsocks-libev.
  *
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with pdnsd; see the file COPYING. If not, see
+ * along with shadowsocks-libev; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -33,13 +33,12 @@
 
 struct listen_ctx {
     ev_io io;
-    ss_addr_t *remote_addr;
     char *iface;
     int remote_num;
     int method;
     int timeout;
     int fd;
-    struct sockaddr sock;
+    struct sockaddr **remote_addr;
 };
 
 struct server_ctx {
@@ -80,7 +79,8 @@ struct remote {
     struct remote_ctx *recv_ctx;
     struct remote_ctx *send_ctx;
     struct server *server;
-    struct addrinfo *addr_info;
+    struct sockaddr_storage addr;
+    int addr_len;
 };
 
 #endif // _LOCAL_H

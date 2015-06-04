@@ -1,7 +1,7 @@
 /*
  * utils.c - Misc utilities
  *
- * Copyright (C) 2013 - 2014, Max Lv <max.c.lv@gmail.com>
+ * Copyright (C) 2013 - 2015, Max Lv <max.c.lv@gmail.com>
  *
  * This file is part of the shadowsocks-libev.
  *
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with pdnsd; see the file COPYING. If not, see
+ * along with shadowsocks-libev; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -31,11 +31,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "utils.h"
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+
+#include "utils.h"
 
 #ifdef HAVE_SETRLIMIT
 #include <sys/time.h>
@@ -61,11 +61,9 @@ void ERROR(const char *s)
 }
 #endif
 
-#ifdef __MINGW32__
+int use_tty = 1;
+
 char *ss_itoa(int i)
-#else
-char *itoa(int i)
-#endif
 {
     /* Room for INT_DIGITS digits, - and '\0' */
     static char buf[INT_DIGITS + 2];
@@ -198,48 +196,78 @@ void usage()
     printf("    ss-[local|redir|server|tunnel]\n");
     printf("\n");
     printf(
-        "          -s <server_host>           host name or ip address of your remote server\n");
-    printf(
-        "          -p <server_port>           port number of your remote server\n");
-    printf(
-        "          -l <local_port>            port number of your local server\n");
-    printf(
-        "          -k <password>              password of your remote server\n");
-    printf("\n");
+        "       -s <server_host>           host name or ip address of your remote server\n");
     printf("\n");
     printf(
-        "          [-m <encrypt_method>]      encrypt method: table, rc4, rc4-md5,\n");
-    printf(
-        "                                     aes-128-cfb, aes-192-cfb, aes-256-cfb,\n");
-    printf(
-        "                                     bf-cfb, camellia-128-cfb, camellia-192-cfb,\n");
-    printf(
-        "                                     camellia-256-cfb, cast5-cfb, des-cfb,\n");
-    printf(
-        "                                     idea-cfb, rc2-cfb and seed-cfb\n");
-    printf("          [-f <pid_file>]            file to store the pid\n");
-    printf("          [-t <timeout>]             socket timeout in seconds\n");
-    printf("          [-c <config_file>]         config file in json\n");
+        "       -p <server_port>           port number of your remote server\n");
     printf("\n");
+    printf(
+        "       -l <local_port>            port number of your local server\n");
     printf("\n");
-    printf("          [-i <interface>]           network interface to bind,\n");
-    printf("                                     not available in redir mode\n");
-    printf("          [-b <local_address>]       local address to bind,\n");
-    printf("                                     not available in server mode\n");
-    printf("          [-u]                       enable udprelay mode\n");
-    printf("                                     not available in redir mode\n");
     printf(
-        "          [-L <addr>:<port>]         setup a local port forwarding tunnel,\n");
-    printf(
-        "                                     only available in tunnel mode\n");
-    printf("          [-v]                       verbose mode\n");
+        "       -k <password>              password of your remote server\n");
     printf("\n");
+    printf(
+        "       [-m <encrypt_method>]      encrypt method: table, rc4, rc4-md5,\n");
+    printf(
+        "                                  aes-128-cfb, aes-192-cfb, aes-256-cfb,\n");
+    printf(
+        "                                  bf-cfb, camellia-128-cfb, camellia-192-cfb,\n");
+    printf(
+        "                                  camellia-256-cfb, cast5-cfb, des-cfb, idea-cfb,\n");
+    printf(
+        "                                  rc2-cfb, seed-cfb, salsa20 and chacha20\n");
     printf("\n");
-    printf("          [--fast-open]              enable TCP fast open,\n");
     printf(
-        "                                     only available on Linux kernel > 3.7.0\n");
+        "       [-f <pid_file>]            the file path to store pid\n");
+    printf("\n");
     printf(
-        "          [--acl <acl_file>]         config file of ACL (Access Control List)\n");
+        "       [-t <timeout>]             socket timeout in seconds\n");
+    printf("\n");
+    printf(
+        "       [-c <config_file>]         the path to config file\n");
+    printf("\n");
+    printf(
+        "       [-i <interface>]           network interface to bind,\n");
+    printf(
+        "                                  not available in redir mode\n");
+    printf("\n");
+    printf(
+        "       [-b <local_address>]       local address to bind,\n");
+    printf(
+        "                                  not available in server mode\n");
+    printf("\n");
+    printf(
+        "       [-u]                       enable udprelay mode,\n");
+    printf(
+        "                                  TPROXY is required in redir mode\n");
+    printf("\n");
+    printf(
+        "       [-L <addr>:<port>]         specify destination server address and port\n");
+    printf(
+        "                                  for local port forwarding,\n");
+    printf(
+        "                                  only available in tunnel mode\n");
+    printf("\n");
+    printf(
+        "       [-d <addr>]                setup name servers for internal DNS resolver,\n");
+    printf(
+        "                                  only available in server mode\n");
+    printf("\n");
+    printf(
+        "       [--fast-open]              enable TCP fast open,\n");
+    printf(
+        "                                  only available in local and server mode,\n");
+    printf(
+        "                                  with Linux kernel > 3.7.0\n");
+    printf("\n");
+    printf(
+        "       [--acl <acl_file>]         config file of ACL (Access Control List)\n");
+    printf(
+        "                                  only available in local and server mode\n");
+    printf("\n");
+    printf(
+        "       [-v]                       verbose mode\n");
     printf("\n");
 }
 

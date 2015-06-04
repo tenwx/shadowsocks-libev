@@ -1,7 +1,7 @@
 /*
  * server.c - Define the config data structure
  *
- * Copyright (C) 2013 - 2014, Max Lv <max.c.lv@gmail.com>
+ * Copyright (C) 2013 - 2015, Max Lv <max.c.lv@gmail.com>
  *
  * This file is part of the shadowsocks-libev.
  * shadowsocks-libev is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with pdnsd; see the file COPYING. If not, see
+ * along with shadowsocks-libev; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -24,7 +24,9 @@
 
 #define MAX_REMOTE_NUM 10
 #define MAX_CONF_SIZE 16 * 1024
-#define DNS_THREAD_NUM 4
+#define MAX_DNS_NUM 4
+#define MAX_CONNECT_TIMEOUT 10
+#define MAX_UDP_TIMEOUT 10
 
 typedef struct {
     char *host;
@@ -42,6 +44,7 @@ typedef struct {
     char *timeout;
     int fast_open;
     int nofile;
+    char *nameserver;
 } jconf_t;
 
 jconf_t *read_jconf(const char * file);

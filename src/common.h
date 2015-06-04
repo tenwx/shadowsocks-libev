@@ -1,7 +1,7 @@
 /*
  * common.h - Provide global definitions
  *
- * Copyright (C) 2013 - 2014, Max Lv <max.c.lv@gmail.com>
+ * Copyright (C) 2013 - 2015, Max Lv <max.c.lv@gmail.com>
  *
  * This file is part of the shadowsocks-libev.
  * shadowsocks-libev is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with pdnsd; see the file COPYING. If not, see
+ * along with shadowsocks-libev; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -37,15 +37,18 @@
 
 #endif
 
+#define DEFAULT_CONF_PATH "/etc/shadowsocks/config.json"
+
+#ifndef SOL_TCP
+#define SOL_TCP IPPROTO_TCP
+#endif
+
 int init_udprelay(const char *server_host, const char *server_port,
 #ifdef UDPRELAY_LOCAL
-                  const char *remote_host, const char *remote_port,
+                  const struct sockaddr *remote_addr, const int remote_addr_len,
 #ifdef UDPRELAY_TUNNEL
                   const ss_addr_t tunnel_addr,
 #endif
-#endif
-#ifdef UDPRELAY_REMOTE
-                  int dns_thread_num,
 #endif
                   int method, int timeout, const char *iface);
 

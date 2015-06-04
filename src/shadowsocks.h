@@ -1,7 +1,7 @@
 /*
  * shadowsocks.h - Header files of library interfaces
  *
- * Copyright (C) 2013 - 2014, Max Lv <max.c.lv@gmail.com>
+ * Copyright (C) 2013 - 2015, Max Lv <max.c.lv@gmail.com>
  *
  * This file is part of the shadowsocks-libev.
  * shadowsocks-libev is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with pdnsd; see the file COPYING. If not, see
+ * along with shadowsocks-libev; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -49,7 +49,7 @@ typedef struct {
     .password = "barfoo!",
     .remote_port = 8338,
     .local_port = 1080,
-
+    .timeout = 600;
     .acl = NULL,
     .log = NULL,
     .fast_open = 0,

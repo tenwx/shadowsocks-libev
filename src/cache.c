@@ -1,7 +1,7 @@
 /*
  * cache.c - Manage the connection cache for UDPRELAY
  *
- * Copyright (C) 2013 - 2014, Max Lv <max.c.lv@gmail.com>
+ * Copyright (C) 2013 - 2015, Max Lv <max.c.lv@gmail.com>
  *
  * This file is part of the shadowsocks-libev.
  *
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with pdnsd; see the file COPYING. If not, see
+ * along with shadowsocks-libev; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -44,7 +44,7 @@
     @return EINVAL if dst is NULL, ENOMEM if malloc fails, 0 otherwise
  */
 int cache_create(struct cache **dst, const size_t capacity,
-                 void (*free_cb) (void *element))
+                 void (*free_cb)(void *element))
 {
     struct cache *new = NULL;
 

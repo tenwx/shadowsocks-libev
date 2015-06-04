@@ -1,8 +1,4 @@
-if BUILD_WINCOMPAT
-SUBDIRS = libcork libipset libev src
-else
-SUBDIRS = libcork libipset libasyncns libev src
-endif
+SUBDIRS = libsodium libcork libipset libudns libev src
 
 ACLOCAL_AMFLAGS = -I m4
 man_MANS = shadowsocks-libev.8

@@ -1,7 +1,7 @@
 /*
  * jconf.c - Parse the JSON format config file
  *
- * Copyright (C) 2013 - 2014, Max Lv <max.c.lv@gmail.com>
+ * Copyright (C) 2013 - 2015, Max Lv <max.c.lv@gmail.com>
  *
  * This file is part of the shadowsocks-libev.
  * shadowsocks-libev is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with pdnsd; see the file COPYING. If not, see
+ * along with shadowsocks-libev; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -30,16 +30,14 @@
 #include "json.h"
 #include "string.h"
 
+#include <libcork/core.h>
+
 static char *to_string(const json_value *value)
 {
     if (value->type == json_string) {
         return ss_strndup(value->u.string.ptr, value->u.string.length);
     } else if (value->type == json_integer) {
-#ifdef __MINGW32__
         return strdup(ss_itoa(value->u.integer));
-#else
-        return strdup(itoa(value->u.integer));
-#endif
     } else if (value->type == json_null) {
         return "null";
     } else {
@@ -59,8 +57,16 @@ void free_addr(ss_addr_t *addr)
 
 void parse_addr(const char *str, ss_addr_t *addr)
 {
-    int ret = -1, n = 0;
+    int ipv6 = 0, ret = -1, n = 0;
     char *pch;
+
+    struct cork_ip ip;
+    if (cork_ip_init(&ip, str) != -1) {
+        addr->host = strdup(str);
+        addr->port = NULL;
+        return;
+    }
+
     pch = strchr(str, ':');
     while (pch != NULL) {
         n++;
@@ -68,15 +74,25 @@ void parse_addr(const char *str, ss_addr_t *addr)
         pch = strchr(pch + 1, ':');
     }
     if (n > 1) {
-        if (strcmp(str + ret, "]") != 0) {
+        ipv6 = 1;
+        if (str[ret - 1] != ']') {
             ret = -1;
         }
     }
+
     if (ret == -1) {
-        addr->host = strdup(str);
+        if (ipv6) {
+            addr->host = ss_strndup(str + 1, strlen(str) - 2);
+        } else {
+            addr->host = strdup(str);
+        }
         addr->port = NULL;
     } else {
-        addr->host = ss_strndup(str, ret);
+        if (ipv6) {
+            addr->host = ss_strndup(str + 1, ret - 2);
+        } else {
+            addr->host = ss_strndup(str, ret);
+        }
         addr->port = strdup(str + ret + 1);
     }
 }
@@ -145,7 +161,7 @@ jconf_t *read_jconf(const char * file)
                 }
             } else if (strcmp(name, "server_port") == 0) {
                 conf.remote_port = to_string(value);
-            } else if (strcmp(name, "local") == 0) {
+            } else if (strcmp(name, "local_address") == 0) {
                 conf.local_addr = to_string(value);
             } else if (strcmp(name, "local_port") == 0) {
                 conf.local_port = to_string(value);
@@ -159,6 +175,8 @@ jconf_t *read_jconf(const char * file)
                 conf.fast_open = value->u.boolean;
             } else if (strcmp(name, "nofile") == 0) {
                 conf.nofile = value->u.integer;
+            } else if (strcmp(name, "nameserver") == 0) {
+                conf.nameserver = to_string(value);
             }
         }
     } else {

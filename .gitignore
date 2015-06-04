@@ -3,7 +3,7 @@ build/
 /Makefile
 src/Makefile
 libev/Makefile
-libasyncns/Makefile
+libudns/Makefile
 libcork/Makefile
 libipset/Makefile
 autom4te.cache/
@@ -12,7 +12,8 @@ config.log
 config.status
 libtool
 pid
-ss*
+ss.*
+ss-*
 stamp-h1
 .libs
 .pc
