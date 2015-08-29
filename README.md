@@ -11,7 +11,7 @@ It is a port of [shadowsocks](https://github.com/shadowsocks/shadowsocks)
 created by [@clowwindy](https://github.com/clowwindy) maintained by 
 [@madeye](https://github.com/madeye) and [@linusyang](https://github.com/linusyang).
 
-Current version: 2.2.1 | [Changelog](Changes)
+Current version: 2.3.0 | [Changelog](debian/changelog)
 
 Travis CI: [![Travis CI](https://travis-ci.org/shadowsocks/shadowsocks-libev.png?branch=master)](https://travis-ci.org/shadowsocks/shadowsocks-libev) | Jenkins Matrix: [![Jenkins](https://jenkins.shadowvpn.org/buildStatus/icon?job=Shadowsocks-libev)](https://jenkins.shadowvpn.org/job/Shadowsocks-libev/)
 
@@ -166,6 +166,20 @@ make -j
 make V=99 package/shadowsocks-libev/openwrt/compile
 ```
 
+### OS X
+For OS X , use [homebrew](http://brew.sh) to install or build.
+
+Install homebrew
+
+```bash
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+Install shadowsocks-libev
+
+```bash
+brew install shadowsocks-libev
+```
+
 ### Windows
 
 For Windows, use either MinGW (msys) or Cygwin to build.
@@ -257,6 +271,12 @@ Usage
 
        [--acl <acl_file>]         config file of ACL (Access Control List)
                                   only available in local and server mode
+
+       [--manager-address <addr>] UNIX domain socket address
+                                  only available in server and manager mode
+
+       [--executable <path>]      path to the executable of ss-server
+                                  only available in manager mode
 
        [-v]                       verbose mode
 
